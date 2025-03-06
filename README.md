@@ -1,2 +1,2 @@
-# C-
+# CSharp
 Learning C#
