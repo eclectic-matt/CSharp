@@ -557,6 +557,9 @@ using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(@"C:\Users\Matt\Do
 //=======================
 // NEW EXCEL CLASS (ETL)
 //=======================
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+Console.WriteLine("LOAD AN EXCEL FILE AND READ DATA");
 
 //NEW CLASS TESTS - EXCEL HANDLER
 string excelFilePath = @"C:\Users\Matt\Documents\Personal Docs\active-mot-stations.xlsx";
@@ -579,7 +582,39 @@ ValidationResponse colResponse = xl.GetTotalColumns();
 if(colResponse.Successful){
 	Console.WriteLine("File column count: " + colResponse.Information);
 }
+/*
+//THIS IS SLOW - LOADS ALL 23130 ROWS
 ValidationResponse colData = xl.GetColumnData(2);
 if(colData.Successful){
 	Console.WriteLine("Data in column 2: " + colData.Information);
+}
+*/
+
+//===============
+//CSV FILE READ 
+//===============
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+Console.WriteLine("LOAD A CSV FILE AND READ DATA");
+
+string csvFilePath = @"C:\Users\Matt\Documents\Corsair_Link_20231030_19_19_43.csv";
+var csv = new CSV();
+//LOADING THE WHOLE FILE INTO A STRING (MEMORY ISSUES?)
+//string fileContents = csv.ReadFile(csvFilePath);
+//Console.WriteLine(fileContents);
+//LOADING THE FILE INTO AN ARRAY
+Console.WriteLine("Output ALL lines in the CSV:");
+string[] fileContents = csv.ReadFile(csvFilePath);
+foreach(string line in fileContents){
+	Console.WriteLine(line);
+}
+
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+Console.WriteLine("Output CSV lines which were written at 7:19:");
+foreach(string line in fileContents){
+	//ONLY OUTPUT LINES WRITTEN AT 7:19
+	if(line.Contains("7:19")){
+		Console.WriteLine(line);
+	}
 }
