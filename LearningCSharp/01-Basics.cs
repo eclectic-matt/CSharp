@@ -263,12 +263,30 @@ Console.WriteLine(" ");
 Console.WriteLine("IP ADDRESS VALIDATION");
 Challenges.ChallengesOutput.IPAddressValidation();
 
-//PERSONAL CHALLENGE - GENERATE COMPLEX NUMBERS
+
+//=========================
+//PERSONAL CHALLENGE
+//GENERATE COMPLEX NUMBERS
+//=========================
+
 Console.WriteLine(" ");
 Console.WriteLine("COMPLEX NUMBERS");
+//define a complex number (1 + 2i)
 Complex c1 = new(1, 2);
 Console.WriteLine("c1: " + c1.Print());
+//define another complex number (2 + 4i)
 Complex c2 = new(2, 4);
 Console.WriteLine("c2: " + c2.Print());
-c1 = c1.Add(c2);
-Console.WriteLine("c1 + c2: " + c1.Print());
+//define the addition of the two above numbers
+Complex c3 = c1.Add(c2);
+Console.WriteLine("c1 + c2: " + c3.Print());
+//define the muliplication result of the two above numbers
+Complex c4 = c1.Multiply(c2);
+Console.WriteLine("c1 * c2: " + c4.Print());
+//define the subtraction of the two above numbers
+Complex c5 = c2.Subtract(c1);
+Console.WriteLine("c2 - c1: " + c5.Print());
+//define the division result of the two above numbers
+Complex c6 = c2.Divide(c1);
+Console.WriteLine("c2 / c1: " + c6.Print());
+

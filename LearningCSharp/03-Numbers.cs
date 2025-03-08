@@ -70,11 +70,21 @@ public class Complex(float realPart, float imaginaryPart)
 	public string Print()
 	{
 		char sign;
+		string imaginaryPart = "";
+		//If the imaginary part is > 0
 		if (imaginary > 0){
+			//Its sign will be positive
 			sign = '+';
 		}else{
+			//Its sign will be negative
 			sign = '-';
 		}
-		return real + " " + sign + " " + Math.Abs(imaginary) + "i";
+		//If the imaginary part is not 0
+		if(imaginary != 0){
+			//Output the imaginary part
+			imaginaryPart = sign + " " + Math.Abs(imaginary) + "i";
+		}
+		//Return the real + imaginary parts
+		return real + " " + imaginaryPart;
 	}
 }
