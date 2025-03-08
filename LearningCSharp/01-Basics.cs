@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Challenges;
+using Numbers;
 
 //=====================
 //https://learn.microsoft.com/en-gb/training/modules/csharp-write-first/
@@ -258,4 +259,16 @@ Console.WriteLine(" ");
 //Challenges.ChallengesOutput.MedicineTimes();
 
 //Generate the output of the IP Address Validation
+Console.WriteLine(" ");
+Console.WriteLine("IP ADDRESS VALIDATION");
 Challenges.ChallengesOutput.IPAddressValidation();
+
+//PERSONAL CHALLENGE - GENERATE COMPLEX NUMBERS
+Console.WriteLine(" ");
+Console.WriteLine("COMPLEX NUMBERS");
+Complex c1 = new(1, 2);
+Console.WriteLine("c1: " + c1.Print());
+Complex c2 = new(2, 4);
+Console.WriteLine("c2: " + c2.Print());
+c1 = c1.Add(c2);
+Console.WriteLine("c1 + c2: " + c1.Print());
