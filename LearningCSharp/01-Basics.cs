@@ -645,33 +645,48 @@ using (HttpClient client = new HttpClient())
 
 
 
-//==============
-// DATABASE
-//==============
+//==================
+// DATABASE (MySQL)
+//==================
+//SEE: http://localhost:8080/phpmyadmin/sql.php?db=test&table=persons&pos=0
 Console.WriteLine(" ");
 Console.WriteLine(" ");
 Console.WriteLine("Connect to a MySQL Database");
 
+//Initialize DB connection
 var dbCon = DBConnection.Instance();
+//Localhost
 dbCon.Server = "127.0.0.1";
+//test db (no authentication setup)
 dbCon.DatabaseName = "test";
 dbCon.UserName = "root";
 dbCon.Password = "";
+
+//If a connection was made
 if (dbCon.IsConnect())
 {
-	//suppose col0 and col1 are defined as VARCHAR in the DB
+	//Define the SQL query to call against this DB connection
 	string query = "SELECT PersonId,LastName,FirstName,Address,City FROM persons";
+	//Call the SQL query
 	var cmd = new MySqlCommand(query, dbCon.Connection);
+	//Read from the command result
 	var reader = cmd.ExecuteReader();
+	//While the reader has data left to read
 	while(reader.Read())
 	{
-		//COLUMNS (PersonId, LastName, FirstName, Address, City)
+		//Columns (PersonId, LastName, FirstName, Address, City) - extract into type-specific variables
 		int personId = reader.GetInt32(0);
 		string lastName = reader.GetString(1);
 		string firstName = reader.GetString(2);
 		string address = reader.GetString(3);
 		string city = reader.GetString(4);
+		//Output the results for this DB row
 		Console.WriteLine($"Person #{personId}: {firstName} {lastName} lives at {address} in {city}");
 	}
+
+	//Also add a new row to the DB?
+	//string insertQuery = "INSERT INTO persons (LastName, FirstName, Address, City) VALUES ('Grant', 'Eddy', '2 Electric Avenue', 'London')";
+	//var insertCmd = new MySqlCommand(insertQuery, dbCon.Connection);
+
 	dbCon.Close();
 }
