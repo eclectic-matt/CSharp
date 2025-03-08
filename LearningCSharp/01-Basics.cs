@@ -2,13 +2,17 @@
 
 //REQUIRED PACKAGES
 using OfficeOpenXml;
-using System.Xml.Linq;
+using System;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
+using System.Windows;
+using MySql.Data.MySqlClient;
 
 //MY PACKAGES
 using Challenges;
 using Numbers;
+using Data;
 
 //=====================
 //https://learn.microsoft.com/en-gb/training/modules/csharp-write-first/
@@ -622,7 +626,6 @@ foreach(string line in fileContents){
 }
 
 
-
 //===============
 // GOOGLE SHEETS
 //===============
@@ -638,4 +641,37 @@ using (HttpClient client = new HttpClient())
     string s = await client.GetStringAsync(googleSheetPath);
 	//Output the string to the console
 	Console.WriteLine(s);
+}
+
+
+
+//==============
+// DATABASE
+//==============
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+Console.WriteLine("Connect to a MySQL Database");
+
+var dbCon = DBConnection.Instance();
+dbCon.Server = "127.0.0.1";
+dbCon.DatabaseName = "test";
+dbCon.UserName = "root";
+dbCon.Password = "";
+if (dbCon.IsConnect())
+{
+	//suppose col0 and col1 are defined as VARCHAR in the DB
+	string query = "SELECT PersonId,LastName,FirstName,Address,City FROM persons";
+	var cmd = new MySqlCommand(query, dbCon.Connection);
+	var reader = cmd.ExecuteReader();
+	while(reader.Read())
+	{
+		//COLUMNS (PersonId, LastName, FirstName, Address, City)
+		int personId = reader.GetInt32(0);
+		string lastName = reader.GetString(1);
+		string firstName = reader.GetString(2);
+		string address = reader.GetString(3);
+		string city = reader.GetString(4);
+		Console.WriteLine($"Person #{personId}: {firstName} {lastName} lives at {address} in {city}");
+	}
+	dbCon.Close();
 }

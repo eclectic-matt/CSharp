@@ -87,6 +87,39 @@ public class CSV : ETL
 	}
 }
 
+public class GoogleSheet : ETL 
+{
+	string[]? fileData;
+	bool loaded = false;
+	public async Task ReadFile(string path)
+	{
+		//SET LOADED TO FALSE
+		loaded = false;
+		try {
+			//INIT FILE DATA
+			fileData = [];
+			using (HttpClient client = new HttpClient())
+			{
+				//Setup an async method which loads the entire url contents into a string
+				string s = await client.GetStringAsync(path);
+				//fileData[] = s.Split("\n");
+				//Output the string to the console
+				Console.WriteLine(s);
+			}
+			loaded = true;
+		}catch{
+			throw new Exception("Error loading from file");
+		}
+	}
+
+	public string[] GetLoadedData()
+	{
+		if(!loaded) return [];
+		//ELSE
+		return fileData;
+	}
+}
+
 public class Excel : ETL
 {
 	//THE EXCEL PACKAGE HANDLE
