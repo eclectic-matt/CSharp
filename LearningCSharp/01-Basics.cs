@@ -290,3 +290,147 @@ Console.WriteLine("c2 - c1: " + c5.Print());
 Complex c6 = c2.Divide(c1);
 Console.WriteLine("c2 / c1: " + c6.Print());
 
+//================
+// ARRAYS 
+//================
+string[] fraudulentOrderIDs = new string[3];
+
+fraudulentOrderIDs[0] = "A123";
+fraudulentOrderIDs[1] = "B456";
+fraudulentOrderIDs[2] = "C789";
+try {
+	//the below line will cause an exception (out of bounds)
+	fraudulentOrderIDs[3] = "D000";
+}catch{
+	Console.WriteLine("Tried to add a 4th element to a 3-sized array!");
+}
+
+//output the array values by index
+Console.WriteLine($"First: {fraudulentOrderIDs[0]}");
+Console.WriteLine($"Second: {fraudulentOrderIDs[1]}");
+Console.WriteLine($"Third: {fraudulentOrderIDs[2]}");
+
+//reassign the value in the first array element
+fraudulentOrderIDs[0] = "F000";
+Console.WriteLine($"Reassign First: {fraudulentOrderIDs[0]}");
+Console.WriteLine($"There are {fraudulentOrderIDs.Length} fraudulent orders to process.");
+
+//quick array initialize/assign
+string[] validOrderIDs = [ "A123", "B456", "C789" ];
+Console.WriteLine($"There are {validOrderIDs.Length} valid orders to process.");
+
+//iterate through order IDs
+Console.WriteLine("Iterate order ids:");
+foreach(string orderId in validOrderIDs)
+{
+	Console.WriteLine($"Current Order: {orderId}");
+}
+
+//init an array of ints
+int[] inventory = { 200, 450, 700, 175, 250 };
+//iterate this array, generating a sum as we go
+int sum = 0, bin = 0;
+foreach (int item in inventory)
+{
+	bin++;
+	sum += item;
+	Console.WriteLine($"Bin {bin} = {item} items (Running total: {sum})");
+}
+Console.WriteLine($"Sum of the inventory: {sum}");
+
+//CHALLENGE - DETECT FRAUDULENT ORDERS
+Console.WriteLine(" ");
+Console.WriteLine("Detect fraudulent orders!");
+string[] ordersToCheck = [ "B123", "C234", "A345", "C15", "B177", "G3003", "C235", "B179" ];
+foreach(string order in ordersToCheck)
+{
+	if(order.StartsWith("B")){
+		Console.WriteLine($"Fraudulent Order Detected: {order}");
+	}
+}
+
+//CHALLENGE - STRING ARRAYS 
+Console.WriteLine(" ");
+Console.WriteLine("Generate fortune teller info");
+void GenerateFortuneTeller(int luck)
+{
+	string[] text = {"You have much to", "Today is a day to", "Whatever work you do", "This is an ideal time to"};
+	string[] good = {"look forward to.", "try new things!", "is likely to succeed.", "accomplish your dreams!"};
+	string[] bad = {"fear.", "avoid major decisions.", "may have unexpected outcomes.", "re-evaluate your life."};
+	string[] neutral = {"appreciate.", "enjoy time with friends.", "should align with your values.", "get in tune with nature."};
+	string[] fortune = (luck > 75 ? good : (luck < 25 ? bad : neutral));
+	
+	Console.WriteLine(" ");
+    Console.WriteLine("A fortune teller whispers the following words:");
+	for(int i = 0; i < 4; i++)
+	{
+		Console.Write($"{text[i]} {fortune[i]} ");
+	}
+}
+Random random = new Random();
+for(int index = 0; index < 4; index++)
+{
+	int currentLuck = random.Next(100);
+	GenerateFortuneTeller(currentLuck);
+}
+
+//=====================
+// CHALLENGE
+// STUDENT GRADING APP
+//=====================
+//https://learn.microsoft.com/en-gb/training/modules/guided-project-calculate-print-student-grades/5-exercise-format-strings
+Console.WriteLine(" ");
+Console.WriteLine("Student Score Grading Application:");
+Console.WriteLine(" ");
+
+// initialize variables - graded assignments 
+int sophia1 = 93;
+int sophia2 = 87;
+int sophia3 = 98;
+int sophia4 = 95;
+int sophia5 = 100;
+int[] sophiaScores = [ sophia1, sophia2, sophia3, sophia4, sophia5 ];
+Console.WriteLine($"Sophia Score Sum: {GradingApplication.GetScoresSum(sophiaScores)}");
+Console.WriteLine($"Sophia Score Average: {GradingApplication.GetScoresAverage(sophiaScores)}");
+Console.WriteLine($"Sophia Score Grade: {GradingApplication.GetScoresGrade(sophiaScores)}");
+Console.WriteLine(" ");
+
+int nicolas1 = 80;
+int nicolas2 = 83;
+int nicolas3 = 82;
+int nicolas4 = 88;
+int nicolas5 = 85;
+int[] nicolasScores = [ nicolas1, nicolas2, nicolas3, nicolas4, nicolas5 ];
+Console.WriteLine($"Nicolas Score Sum: {GradingApplication.GetScoresSum(nicolasScores)}");
+Console.WriteLine($"Nicolas Score Average: {GradingApplication.GetScoresAverage(nicolasScores)}");
+Console.WriteLine($"Nicolas Score Grade: {GradingApplication.GetScoresGrade(nicolasScores)}");
+Console.WriteLine(" ");
+
+int zahirah1 = 84;
+int zahirah2 = 96;
+int zahirah3 = 73;
+int zahirah4 = 85;
+int zahirah5 = 79;
+int[] zahirahScores = [ zahirah1, zahirah2, zahirah3, zahirah4, zahirah5 ];
+Console.WriteLine($"Zahirah Score Sum: {GradingApplication.GetScoresSum(zahirahScores)}");
+Console.WriteLine($"Zahirah Score Average: {GradingApplication.GetScoresAverage(zahirahScores)}");
+Console.WriteLine($"Zahirah Score Grade: {GradingApplication.GetScoresGrade(zahirahScores)}");
+Console.WriteLine(" ");
+
+int jeong1 = 90;
+int jeong2 = 92;
+int jeong3 = 98;
+int jeong4 = 100;
+int jeong5 = 97;
+int[] jeongScores = [ jeong1, jeong2, jeong3, jeong4, jeong5 ];
+Console.WriteLine($"Jeong Score Sum: {GradingApplication.GetScoresSum(jeongScores)}");
+Console.WriteLine($"Jeong Score Average: {GradingApplication.GetScoresAverage(jeongScores)}");
+Console.WriteLine($"Jeong Score Grade: {GradingApplication.GetScoresGrade(jeongScores)}");
+Console.WriteLine(" ");
+
+Console.WriteLine("GRADES SUMMARY");
+Console.WriteLine("Name\tScore\tGrade");
+Console.WriteLine($"Sophia\t{GradingApplication.GetScoresAverage(sophiaScores)}\t{GradingApplication.GetScoresGrade(sophiaScores)}");
+Console.WriteLine($"Nicolas\t{GradingApplication.GetScoresAverage(nicolasScores)}\t{GradingApplication.GetScoresGrade(nicolasScores)}");
+Console.WriteLine($"Zahirah\t{GradingApplication.GetScoresAverage(zahirahScores)}\t{GradingApplication.GetScoresGrade(zahirahScores)}");
+Console.WriteLine($"Jeong\t{GradingApplication.GetScoresAverage(jeongScores)}\t{GradingApplication.GetScoresGrade(jeongScores)}");

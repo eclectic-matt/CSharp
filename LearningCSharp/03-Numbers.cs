@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace Numbers;
 
 public static class Numbers 
