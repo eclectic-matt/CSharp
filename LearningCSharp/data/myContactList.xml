@@ -1,0 +1,12 @@
+<contacts>
+	<contact>
+		<name>Matt Tiernan</name>
+		<phone>01234567890</phone>
+		<email>matt@example.com</email>
+	</contact>
+	<contact>
+		<name>Joe Fridges</name>
+		<phone>04564578984</phone>
+		<email>joe.f@example.com</email>
+	</contact>
+</contacts>

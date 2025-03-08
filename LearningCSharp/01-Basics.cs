@@ -1,5 +1,10 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+//REQUIRED PACKAGES
+using OfficeOpenXml;
+using System.Xml.Linq;
+using System.Text;
+//MY PACKAGES
 using Challenges;
 using Numbers;
 
@@ -227,11 +232,11 @@ PrintArray();
 
 void PrintArray()
 {
-    foreach (int x in a)
-    {
-        Console.Write($"{x} ");
-    }
-    Console.WriteLine();
+	foreach (int x in a)
+	{
+		Console.Write($"{x} ");
+	}
+	Console.WriteLine();
 }
 
 //BEST PRACTICES FOR NAMING - PascalCase method names with descriptive parameter names
@@ -361,7 +366,7 @@ void GenerateFortuneTeller(int luck)
 	string[] fortune = (luck > 75 ? good : (luck < 25 ? bad : neutral));
 	
 	Console.WriteLine(" ");
-    Console.WriteLine("A fortune teller whispers the following words:");
+	Console.WriteLine("A fortune teller whispers the following words:");
 	for(int i = 0; i < 4; i++)
 	{
 		Console.Write($"{text[i]} {fortune[i]} ");
@@ -434,3 +439,113 @@ Console.WriteLine($"Sophia\t{GradingApplication.GetScoresAverage(sophiaScores)}\
 Console.WriteLine($"Nicolas\t{GradingApplication.GetScoresAverage(nicolasScores)}\t{GradingApplication.GetScoresGrade(nicolasScores)}");
 Console.WriteLine($"Zahirah\t{GradingApplication.GetScoresAverage(zahirahScores)}\t{GradingApplication.GetScoresGrade(zahirahScores)}");
 Console.WriteLine($"Jeong\t{GradingApplication.GetScoresAverage(jeongScores)}\t{GradingApplication.GetScoresGrade(jeongScores)}");
+
+
+//============================
+// LEARNING C# ITERABLES
+//============================
+
+Console.WriteLine("ITERATOR TO GENERATE SOME NUMBERS:");
+foreach(int number in IterableTests.SomeNumbers()){
+	Console.Write(number.ToString() + " ");
+}
+
+Console.WriteLine(" ");
+Console.WriteLine("GENERATE EVEN NUMBERS:");
+foreach(int number in IterableTests.EvenSequence(5,16))
+{
+	Console.Write(number.ToString() + " ");
+}
+
+Console.WriteLine(" ");
+Console.WriteLine("GET DAYS OF WEEK:");
+foreach(string day in IterableTests.GetDaysOfWeek())
+{
+	Console.Write(day + " ");
+}
+
+//============================
+// LEARNING LINQ
+// Language INtegrated Query
+//============================
+
+//LINQ SOURCE: https://learn.microsoft.com/en-gb/dotnet/csharp/linq/
+Console.WriteLine(" ");
+Console.WriteLine("GET SCORES ABOVE 80:");
+
+// Specify the data source.
+int[] scores = [97, 92, 81, 60];
+
+// Define the query expression.
+IEnumerable<int> scoreQuery =
+	from score in scores
+	where score > 80
+	select score;
+
+// Execute the query.
+foreach (var i in scoreQuery)
+{
+	Console.Write(i + " ");
+}
+// Output: 97 92 81
+
+// Create a data source from an XML document.
+// using System.Xml.Linq;
+//Define the path (absolute needed, relative links to the /bin director)
+var contactFilePath = "S:/Development/Github/CSharp/LearningCSharp/data/myContactList.xml";
+//Use the XElement to load the XML file
+XElement contactList = XElement.Load(contactFilePath);
+//Define an inumerable and define the Linq query
+//This searches the XML for a descendant "contact" element
+//And from these descendants, extract the "phone" element
+IEnumerable<string> contactQuery =
+	from item in contactList.Descendants("contact")
+	select (string) item.Element("phone");
+
+//Execute the query
+foreach (var i in contactQuery)
+{
+	Console.Write(i + " ");
+}
+
+//=========================
+// FURTHER TESTING 
+// LOADING EXCEL SHEETS
+//=========================
+//HAD TO INSTALL EPPlus VIA NUGET:
+//dotnet add package EPPlus --version 7.6.1
+//ALSO NEEDS THE FOLLOWING PACKAGES:
+//using OfficeOpenXml;
+//using System.Xml.Linq;
+//using System.Text;
+
+
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+Console.WriteLine("OUTPUT MOT STATIONS IN SHREWSBURY FROM EXCEL SHEET:");
+
+//MUST SET LICENSE TO NON-COMMERCIAL TO WORK
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+//EXCEL TESTING
+using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(@"C:\Users\Matt\Documents\Personal Docs\active-mot-stations.xlsx")))
+{
+	var myWorksheet = xlPackage.Workbook.Worksheets.First(); //select sheet here
+	var totalRows = myWorksheet.Dimension.End.Row;
+	var totalColumns = myWorksheet.Dimension.End.Column;
+
+	var sb = new StringBuilder(); //this is your data
+	for (int rowNum = 1; rowNum <= totalRows; rowNum++) //select starting row here
+	{
+		//GET ALL THE DATA (EVERY COLUMN FROM 1 -> totalColumns)
+		//var row = myWorksheet.Cells[rowNum, 1, rowNum, totalColumns].Select(c => c.Value == null ? string.Empty : c.Value.ToString());
+		
+		//SKIP IF NOT LOCATED IN Shrewsbury?
+		if(myWorksheet.Cells[rowNum,6].Value.ToString().ToLower() != "shrewsbury") continue;
+
+		//GET THE DATA FROM COLUMN 2 ONLY (TradingName IN THIS EXAMPLE)
+		var row = myWorksheet.Cells[rowNum, 2, rowNum, 2].Select(c => c.Value == null ? string.Empty : c.Value.ToString());
+		sb.AppendLine(string.Join(",", row));
+	}
+	Console.WriteLine(sb.ToString());
+}
