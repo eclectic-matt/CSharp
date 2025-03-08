@@ -4,6 +4,8 @@
 using OfficeOpenXml;
 using System.Xml.Linq;
 using System.Text;
+using System.Xml;
+
 //MY PACKAGES
 using Challenges;
 using Numbers;
@@ -617,4 +619,23 @@ foreach(string line in fileContents){
 	if(line.Contains("7:19")){
 		Console.WriteLine(line);
 	}
+}
+
+
+
+//===============
+// GOOGLE SHEETS
+//===============
+Console.WriteLine(" ");
+Console.WriteLine(" ");
+Console.WriteLine("Output the contents of a Google Sheet (as CSV):");
+//Define a google sheet url to load (note: using the /export?format=csv option)
+string googleSheetPath = "https://docs.google.com/spreadsheets/d/114vBgHnryVDqZU7tOTBXFB-qh5fNQ4dsAPProBE3xnE/export?format=csv";
+//Initialize a HTTP Client
+using (HttpClient client = new HttpClient())
+{
+	//Setup an async method which loads the entire url contents into a string
+    string s = await client.GetStringAsync(googleSheetPath);
+	//Output the string to the console
+	Console.WriteLine(s);
 }
