@@ -248,70 +248,61 @@ void DisplayRandomNumbers()
 
 Console.WriteLine("Generating some random numbers: ");
 DisplayRandomNumbers();
+Console.WriteLine(" ");
 
-
-//CHALLENGE - REFORMAT DUPLICATED CODE 
-int[] times = [800, 1200, 1600, 2000];
-int diff = 0;
-
-Console.WriteLine("Enter current GMT");
-int currentGMT = Convert.ToInt32(Console.ReadLine());
-
-Console.WriteLine("Current Medicine Schedule:");
-DisplayTimes();
-
-Console.WriteLine("Enter new GMT");
-int newGMT = Convert.ToInt32(Console.ReadLine());
-
-if (Math.Abs(newGMT) > 12 || Math.Abs(currentGMT) > 12)
+//============================
+// CHALLENGE - VALIDATE IPv4
+//============================
+void ValidateIPV4Address(string address)
 {
-    Console.WriteLine("Invalid GMT");
-}
-else if (newGMT <= 0 && currentGMT <= 0 || newGMT >= 0 && currentGMT >= 0) 
-{
-    diff = 100 * (Math.Abs(newGMT) - Math.Abs(currentGMT));
-    AdjustTimes();
-} 
-else 
-{
-    diff = 100 * (Math.Abs(newGMT) + Math.Abs(currentGMT));
-    AdjustTimes();
+	if (ValidateLength(address) && ValidateZeroes(address) && ValidateRange(address)) 
+	{
+		Console.WriteLine($"ip {address} is a valid IPv4 address");
+	} 
+	else 
+	{
+		Console.WriteLine($"ip {address} is an invalid IPv4 address");
+	}
 }
 
-Console.WriteLine("New Medicine Schedule:");
-DisplayTimes();
-
-void DisplayTimes()
+bool ValidateLength(string ip)
 {
-    /* Format and display medicine times */
-    foreach (int val in times)
-    {
-        string time = val.ToString();
-        int len = time.Length;
-
-        if (len >= 3)
-        {
-            time = time.Insert(len - 2, ":");
-        }
-        else if (len == 2)
-        {
-            time = time.Insert(0, "0:");
-        }
-        else
-        {
-            time = time.Insert(0, "0:0");
-        }
-
-        Console.Write($"{time} ");
-    }
-    Console.WriteLine();
+	string[] address = ip.Split(".");
+	if(address.Length == 4){
+		return true;
+	}else{
+		return false;
+	}
 }
 
-void AdjustTimes() 
+bool ValidateZeroes(string ip)
 {
-    /* Adjust the times by adding the difference, keeping the value within 24 hours */
-    for (int i = 0; i < times.Length; i++) 
-    {
-        times[i] = ((times[i] + diff)) % 2400;
-    }
+	string[] address = ip.Split(".");
+	foreach(string number in address){
+		if(number.Length > 1 && number.StartsWith("0")){
+			return false;
+		}
+	}
+	return true;
+}
+
+bool ValidateRange(string ip)
+{
+	string[] address = ip.Split(".", StringSplitOptions.RemoveEmptyEntries);
+	foreach(string number in address){
+		int value = int.Parse(number);
+		if(value < 0 || value > 255){
+			return false;
+		}
+	}
+	return true;
+}
+
+Console.WriteLine("Validate an IP Address:");
+string ipv4Input = "107.31.1.5";
+ValidateIPV4Address(ipv4Input);
+
+string[] addresses = ["106.129.22.1", "191.229.239.22", "242.256.32.22"];
+foreach(string address in addresses){
+	ValidateIPV4Address(address);
 }
