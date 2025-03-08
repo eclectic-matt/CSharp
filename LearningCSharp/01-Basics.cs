@@ -549,3 +549,31 @@ using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(@"C:\Users\Matt\Do
 	}
 	Console.WriteLine(sb.ToString());
 }
+
+
+//=======================
+// NEW EXCEL CLASS (ETL)
+//=======================
+
+//NEW CLASS TESTS - EXCEL HANDLER
+string excelFilePath = @"C:\Users\Matt\Documents\Personal Docs\active-mot-stations.xlsx";
+//Define a new instance of the Excel class
+var xl = new Excel();
+//Load the file in the path specified above
+xl.LoadFile(excelFilePath);
+
+//Load a sheet by sheetIndex
+xl.LoadSheetByIndex(0);
+
+//OR Load a sheet by sheet name
+xl.LoadSheetByName("active-mot-stations");
+
+ValidationResponse rowResponse = xl.GetTotalRows();
+if(rowResponse.Successful){
+	Console.WriteLine("File row count: " + rowResponse.Information);
+}
+ValidationResponse colResponse = xl.GetTotalColumns();
+if(colResponse.Successful){
+	Console.WriteLine("File column count: " + colResponse.Information);
+}
+
