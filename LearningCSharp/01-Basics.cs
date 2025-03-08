@@ -519,6 +519,8 @@ foreach (var i in contactQuery)
 //using System.Xml.Linq;
 //using System.Text;
 
+/*
+//COMMENTING THIS SECTION OUT AS IT HAS TO RUN THROUGH 23130 ROWS OF DATA - TAKES A FEW SECONDS!
 
 Console.WriteLine(" ");
 Console.WriteLine(" ");
@@ -549,6 +551,7 @@ using (ExcelPackage xlPackage = new ExcelPackage(new FileInfo(@"C:\Users\Matt\Do
 	}
 	Console.WriteLine(sb.ToString());
 }
+*/
 
 
 //=======================
@@ -576,4 +579,7 @@ ValidationResponse colResponse = xl.GetTotalColumns();
 if(colResponse.Successful){
 	Console.WriteLine("File column count: " + colResponse.Information);
 }
-
+ValidationResponse colData = xl.GetColumnData(2);
+if(colData.Successful){
+	Console.WriteLine("Data in column 2: " + colData.Information);
+}

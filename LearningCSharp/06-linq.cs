@@ -64,6 +64,8 @@ public class Excel : ETL
 	{
 		//SET THE RESOURCE PATH
 		ResourcePath = path;
+		//SET THE LICENSE TO NON-COMMERCIAL
+		ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 		//SET UP THE EXCEL PACKAGE
 		xlPackage = new ExcelPackage(new FileInfo(@path));
 	}
@@ -137,11 +139,41 @@ public class Excel : ETL
 		return result;
 	}
 
+	public ValidationResponse GetColumnData(int columnId = 1)
+	{
+		//INITIALIZE THE RESPONSE OBJECT
+		var result = new ValidationResponse();
+		result.Successful = false;
+		result.Information = "Column ID must be 1 or greater!";
+		//COLUMNS ARE 1-INDEXED - HANDLE LESS THAN 1
+		if(columnId < 1) return result;
+		
+		//Initialise a string builder to hold the data
+		var sb = new StringBuilder();
+		//Iterate over rows in the data
+		int totalRows = int.Parse(GetTotalRows().Information);
+		for (int rowNum = 1; rowNum <= totalRows; rowNum++) //select starting row here
+		{
+			//Get the data from the requested column ID
+			var row = ws.Cells[rowNum, columnId, rowNum, columnId].Select(c => c.Value == null ? string.Empty : c.Value.ToString());
+			sb.AppendLine(string.Join(",", row));
+		}
+		result.Successful = true;
+		result.Information = sb.ToString();
+
+		return result;
+	}
+
 }
 
-
+/**
+ * A standard "response" object where an extract/load/transform fails.
+ */
 public class ValidationResponse
 {
-    public bool Successful { get; set; }
-    public string? Information { get; set; }
+	//Successful: true if the method was successful
+	public bool Successful { get; set; }
+	//Information: returns failure information, or the result of the method as a string
+	public string? Information { get; set; }
 }
+
