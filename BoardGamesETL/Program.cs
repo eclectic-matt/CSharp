@@ -9,9 +9,21 @@ using System.Text.RegularExpressions;
 
 string RemoveSpecialCharacters(string str)
 {
-    return Regex.Replace(str, "[^a-zA-Z0-9_.',:()!]+", "", RegexOptions.Compiled);
+	//VALID CHARACTERS a-z, A-Z, 0-9, _.',:()! 
+    return Regex.Replace(str, "[^a-zA-Z0-9_.',:()! ]+", "", RegexOptions.Compiled);
 }
 
+/*
+//LOAD THE ENTIRE BGG RANKINGS AS CSV FILE
+string csvFilePath = @"S:\Downloads\boardgames_ranks_2025-03-09\boardgames_ranks.csv";
+var csv = new CSV();
+//LOADING THE FILE INTO AN ARRAY
+Console.WriteLine("Output ALL lines in the CSV:");
+string[] fileContents = csv.ReadFile(csvFilePath);
+foreach(string line in fileContents){
+	Console.WriteLine(line);
+}
+*/
 
 Console.WriteLine(" ");
 Console.WriteLine("GET FILTERED BG DATA FROM XML BGG EXPORT:");
