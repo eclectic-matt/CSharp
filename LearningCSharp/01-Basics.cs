@@ -495,6 +495,10 @@ foreach (var i in scoreQuery)
 }
 // Output: 97 92 81
 
+
+Console.WriteLine(" ");
+Console.WriteLine("GET CONTACTS FROM THE XML CONTACT LIST:");
+
 // Create a data source from an XML document.
 // using System.Xml.Linq;
 //Define the path (absolute needed, relative links to the /bin director)
@@ -513,6 +517,29 @@ foreach (var i in contactQuery)
 {
 	Console.Write(i + " ");
 }
+
+Console.WriteLine(" ");
+Console.WriteLine("GET FILTERED BG DATA FROM XML BGG EXPORT:");
+
+//https://boardgamegeek.com/xmlapi/search?search=a
+var bggExportFilePath = "S:/Downloads/bggSearch_a.xml";
+XElement bgList = XElement.Load(bggExportFilePath);
+IEnumerable<string> bgQuery = 
+	from boardgame in bgList.Descendants("boardgame")
+	where (int?) boardgame.Element("yearpublished") < 1980
+	select (string) boardgame.Element("name");
+
+Console.WriteLine("FILTERED RESULTS COUNT: " + bgQuery.Count());
+//Execute the query
+foreach (var i in bgQuery)
+{
+	//Console.WriteLine(i + " ");
+}
+
+
+
+
+
 
 //=========================
 // FURTHER TESTING 
@@ -634,16 +661,28 @@ Console.WriteLine(" ");
 Console.WriteLine("Output the contents of a Google Sheet (as CSV):");
 //Define a google sheet url to load (note: using the /export?format=csv option)
 string googleSheetPath = "https://docs.google.com/spreadsheets/d/114vBgHnryVDqZU7tOTBXFB-qh5fNQ4dsAPProBE3xnE/export?format=csv";
-//Initialize a HTTP Client
-using (HttpClient client = new HttpClient())
+//Get a new instance of the ETL/GoogleSheet class
+var gs = new GoogleSheet();
+await gs.ReadFile(googleSheetPath);
+string[] gSheetData = gs.GetLoadedData();
+foreach(string line in gSheetData)
 {
-	//Setup an async method which loads the entire url contents into a string
-    string s = await client.GetStringAsync(googleSheetPath);
-	//Output the string to the console
-	Console.WriteLine(s);
+	//WRITE THE WHOLE LINE (CSV FORMAT Data,Here,And,There)
+	//Console.WriteLine(line);
+	//WRITE ONLY THE FIRST COLUMN
+	string[] row = line.Split(",");
+	Console.WriteLine(row[0]);
 }
 
-
+Console.WriteLine("Filter using Linq Query from Google Sheet:");
+IEnumerable<string> queryString = 
+	from item in gs.FileData
+	select (string) item.Split(",")[0];
+string[] filterData = gs.Filter(queryString);
+foreach(string line in filterData)
+{
+	Console.WriteLine(line);
+}
 
 //==================
 // DATABASE (MySQL)
