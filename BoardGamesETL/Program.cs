@@ -2,6 +2,35 @@
  * Board Games Extract-Transform-Load program. 
  */
 
+//OTHER DATA SOURCES: 
+// - https://geekgroup.app/users/EclecticMatt/plays
+// - https://boardgamegeek.com/xmlapi/search?search=a
+// - https://boardgamegeek.com/data_dumps/bg_ranks
+
+/*
+MySQL => SHOW COLUMNS FROM `board_games`
+
+Field				Type				Null	Key	Default	Extra
+
+id					int(11)				NO		PRI	NULL	auto_increment
+bgg_id				int(11)				YES			NULL	
+name				varchar(255)		YES			NULL	
+year_published		smallint(6)			YES			NULL
+overall_rank		int(10) unsigned	YES			NULL
+bayes_average		double unsigned		YES			NULL
+average				double unsigned		YES			NULL
+users_rated			int(10) unsigned	YES			NULL
+is_expansion		tinyint(1)			YES			0
+abstracts_rank		int(11)				YES			NULL
+cgs_rank			int(11)				YES			NULL
+children_games_rank	int(11)				YES			NULL
+family_games_rank	int(11)				YES			NULL
+party_games_rank	int(11)				YES			NULL
+strategy_games_rank	int(11)				YES			NULL
+thematic_games_rank	int(11)				YES			NULL
+wargames_rank		int(11)				YES			NULL
+*/
+
 using System.Xml.Linq;
 using MySql.Data.MySqlClient;
 using Data;
@@ -19,60 +48,8 @@ var csv = new CSV();
 //LOADING THE FILE INTO AN ARRAY
 Console.WriteLine("Output ALL lines in the CSV:");
 string[] fileContents = csv.ReadFile(csvFilePath);
-/*foreach(string line in fileContents){
-	Console.WriteLine(line);
-}*/
 
-//OTHER DATA SOURCES: 
-// - https://geekgroup.app/users/EclecticMatt/plays
-// - https://boardgamegeek.com/xmlapi/search?search=a
-// - https://boardgamegeek.com/data_dumps/bg_ranks
-
-
-/*
-id
-name
-yearpublished
-rank
-bayesaverage
-average
-usersrated
-is_expansion
-abstracts_rank
-cgs_rank
-childrensgames_rank
-familygames_rank
-partygames_rank
-strategygames_rank
-thematic_rank
-wargames_rank
-*/
-//Int32.TryParse(value, out number) 
-//int.TryParse(s, out i) ? i : 42;
-
-/*IEnumerable<BoardGame> bgQuery = 
-	from boardgame in fileContents
-	where boardgame != null
-	select new BoardGame (
-		BggId: (int) int.Parse(boardgame.Split(",")[0]),
-		Name: (string) boardgame.Split(",")[1],
-		YearPublished: (int) int.Parse(boardgame.Split(",")[2]),
-		OverallRank: (int) int.Parse(boardgame.Split(",")[3]),
-		BayesAverage: (float) float.Parse(boardgame.Split(",")[4]),
-		Average: (float) float.Parse(boardgame.Split(",")[5]),
-		UsersRated: (int) int.Parse(boardgame.Split(",")[6]),
-		IsExpansion: (bool) (boardgame.Split(",")[7] != "0"),
-		AbstractsRank: (int) int.Parse(boardgame.Split(",")[8]),
-		CgsRank: (int) int.Parse(boardgame.Split(",")[9]),
-		ChildrenGamesRank: (int) int.Parse(boardgame.Split(",")[10]),
-		FamilyGamesRank: (int) int.Parse(boardgame.Split(",")[11]),
-		PartyGamesRank: (int) int.Parse(boardgame.Split(",")[12]),
-		StrategyGamesRank: (int) int.Parse(boardgame.Split(",")[13]),
-		ThematicGamesRank: (int) int.Parse(boardgame.Split(",")[14]),
-		WargamesRank: (int) int.Parse(boardgame.Split(",")[15])
-	);
-*/
-
+//Define a LINQ query which extracts the relevant data into a BoardGame Record (defined at bottom of script)
 IEnumerable<BoardGame> bgQuery = 
 	from boardgame in fileContents
 	where boardgame != null
@@ -95,25 +72,10 @@ IEnumerable<BoardGame> bgQuery =
 		WargamesRank: int.TryParse(boardgame.Split(",")[15], out int warRnk) ? warRnk : 0
 	);
 
-foreach(BoardGame game in bgQuery){
+//OUTPUT TO THE CONSOLE (DEBUG ONLY)
+/*foreach(BoardGame game in bgQuery){
 	Console.WriteLine($"GAME FOUND: {game.Name} - RANK {game.OverallRank}");
-}
-
-/*
-Console.WriteLine(" ");
-Console.WriteLine("GET FILTERED BG DATA FROM XML BGG EXPORT:");
-
-//https://boardgamegeek.com/xmlapi/search?search=a
-var bggExportFilePath = "S:/Downloads/bggSearch_a.xml";
-XElement bgList = XElement.Load(bggExportFilePath);
-IEnumerable<BoardGame> bgQuery = 
-	from boardgame in bgList.Descendants("boardgame")
-	where boardgame.Element("yearpublished") != null
-	select new BoardGame (
-		Name: (string) boardgame.Element("name"),
-		YearPublished: (int) boardgame.Element("yearpublished")
-	);
-*/
+}*/
 
 //==================
 // DATABASE (MySQL)
@@ -141,6 +103,7 @@ if (dbCon.IsConnect())
 	{
 		//REPLACE SPECIAL CHARS FROM THE GAME NAME STRING 
 		string gameName = RemoveSpecialCharacters(game.Name);
+		//GENERATE AN INSERT QUERY STRING (SEPARATED ONTO NEW LINES FOR EASE OF READING)
 		string insertQuery = $"INSERT INTO {tableName} (";
 		insertQuery += "bgg_id,";
 		insertQuery += "name,";
@@ -187,8 +150,7 @@ if (dbCon.IsConnect())
 
 Console.WriteLine($"Inserted {totalRowsInserted} Board Games into the Database");
 
-
-//public record BoardGame (string Name, int YearPublished);
+//THE DATA DEFINITION FOR A BOARD GAME (AS PER THE BGG EXPORT FROM https://boardgamegeek.com/data_dumps/bg_ranks)
 public record BoardGame (
 	int BggId, 
 	string Name, 
@@ -207,4 +169,3 @@ public record BoardGame (
 	int ThematicGamesRank,
 	int WargamesRank
 );
-
