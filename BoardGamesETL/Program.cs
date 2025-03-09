@@ -29,6 +29,15 @@ party_games_rank	int(11)				YES			NULL
 strategy_games_rank	int(11)				YES			NULL
 thematic_games_rank	int(11)				YES			NULL
 wargames_rank		int(11)				YES			NULL
+
+
+SELECT 'Overall', name FROM `board_games` WHERE overall_rank = 1
+UNION ALL 
+SELECT 'Childrens', name FROM board_games WHERE children_games_rank = 1
+UNION ALL 
+SELECT 'Party', name FROM board_games WHERE party_games_rank = 1
+UNION ALL 
+SELECT 'Strategy', name FROM board_games WHERE strategy_games_rank = 1
 */
 
 using System.Xml.Linq;
