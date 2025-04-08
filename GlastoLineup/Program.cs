@@ -3,29 +3,15 @@ using HtmlAgilityPack;
 using System.Globalization;
 
 var web = new HtmlWeb();
+
+//DEFINE THE SITE URL TO SCRAPE
 string siteUrl = "https://glastonburyfestivals.co.uk/line-up/line-up-2024/";
+//LOAD THIS WEB DOCUMENT
 var document = web.Load(siteUrl);
-//INITIALIZE THE LISTINGS
+//INITIALIZE THE LISTINGS (NOT CURRENTLY USED - PLANNED FOR FUTURE)
 var listings = new List<Listing>();
 
-//ITERATE THE PAGE AND STORE THE TIMES FOR EACH "LISTING"
-//div#pyramid-stage
-//<h4.stage-day>FRIDAY</h4>
-//table
-//tbody
-//tr
-//<td>ARTIST NAME</td>
-//OPTIONAL<a.artist-link>ARTIST NAME</a>
-//<td.timings>START_TIME&nbsp;-&nbsp;END_TIME</td>
-
-//TOP-LEVEL SELECTOR
-//string topSelector = ".line-ups-outer.view-by-stages";
-//var topDiv = document.DocumentNode.QuerySelectorAll("div" + topSelector);
-/*foreach(var element in topDiv){
-	Console.WriteLine(element.InnerHtml);
-}*/
-
-//RESET LINEUP FILE BETWEEN RUNS
+//RESET LINEUP CSV FILE BETWEEN RUNS
 File.WriteAllText(@"S:\Development\Github\CSharp\GlastoLineup\lineup.csv", "Stage Name,Day,Artist(s),Start Time,End Time" + Environment.NewLine);
 
 //GET TEXT INFO TO TITLE CASE ARTIST/STAGE NAMES
@@ -110,7 +96,7 @@ foreach(var element in stageDivs)
 
 
 
-
+//WILL USE IN FUTURE VERSION OF THIS SCRIPT
 public record Listing 
 { 
 	public string? Name { get; set; } 
